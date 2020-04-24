@@ -11,6 +11,7 @@ namespace Project
 
     public class AddMovie
     {
+        [System.ComponentModel.DataAnnotations.Key]
         public int MovieID { get; set; }
         public string Name { get; set; }
         public decimal Cost { get; set; }

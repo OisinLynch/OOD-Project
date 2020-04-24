@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,8 @@ namespace OODProject
         List<Movie> movies = new List<Movie>();
         List<Movie> selectedMovies = new List<Movie>();
         List<Movie> filteredMovies = new List<Movie>();
+
+        CinemaData db = new CinemaData();
 
         decimal totalCost = 0;
         public MainWindow()
@@ -302,6 +305,38 @@ namespace OODProject
                     }
                 }
             }// end of raio buttton
+        }
+
+        private void AddMovies_Loaded_1(object sender, RoutedEventArgs e)
+        {
+            var query = from c in db.Cinemas
+                        select c.Name;
+
+            var cinema = query.ToList();
+
+            lbxCinemas.ItemsSource = cinema;
+
+            lbxMovies.SelectedItem = 0;
+
+            string movieName = cinema.ElementAt(0);
+
+            var movies = from m in db.AddMovies
+                         where m.Cinema.Name == movieName
+                         select m.Name;
+
+            lbxMovies.ItemsSource = movies.ToList();
+        }
+
+        private void LbxCinemas_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var query = from c in db.AddMovies
+                        orderby c.Cinema.Name
+                        select c.Name;
+
+            string selected = lbxCinemas.SelectedItem as string;
+
+            //Update the Movies list
+            lbxMovies.ItemsSource = query.ToList();
         }
     }
 }
